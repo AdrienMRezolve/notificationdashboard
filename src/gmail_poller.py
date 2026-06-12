@@ -22,7 +22,7 @@ def access_token():
 def poll():
     if not (config.GOOGLE_CLIENT_ID and config.GOOGLE_CLIENT_SECRET and config.GOOGLE_REFRESH_TOKEN):
         print("gmail: credentials not set, skipping")
-        return 0
+        return None
 
     token = access_token()
     headers = {"Authorization": f"Bearer {token}"}

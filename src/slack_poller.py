@@ -26,7 +26,7 @@ def call(method, **params):
 def poll():
     if not config.SLACK_USER_TOKEN:
         print("slack: SLACK_USER_TOKEN not set, skipping")
-        return 0
+        return None
 
     me = call("auth.test")["user_id"]
     since = db.poll_window_start("slack")

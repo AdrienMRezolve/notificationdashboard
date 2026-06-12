@@ -15,7 +15,8 @@ def main():
     failures = []
     for channel, poll in POLLERS.items():
         try:
-            poll()
+            if poll() is None:
+                continue  # credentials not configured yet — leave status 'pending'
             db.mark_connection(channel, "ok")
         except Exception as e:  # noqa: BLE001 - report and continue
             print(f"{channel}: ERROR {e}")
