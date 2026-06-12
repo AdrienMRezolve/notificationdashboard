@@ -26,23 +26,24 @@ Slack API  ─┘        │
 Run `sql/001_init.sql` in the SQL editor of your Supabase project (a new
 project or the existing one — tables don't collide).
 
-### 2. Outlook / Microsoft (~10 min, one time)
-1. https://portal.azure.com → **Microsoft Entra ID → App registrations →
-   New registration**. Name it (e.g. "Inbox radar"), supported account types:
-   *Accounts in this organizational directory only*. No redirect URI needed.
-2. In the app: *Authentication → Advanced settings → Allow public client
-   flows* → **Yes** → Save.
-3. *API permissions → Add a permission → Microsoft Graph → Delegated* →
-   **Mail.Read**. (offline_access is granted automatically at sign-in.)
-4. Copy the **Application (client) ID** and **Directory (tenant) ID** from
-   the Overview page.
-5. Locally: `python3 scripts/outlook_auth.py` → it shows a code → open
+### 2. Outlook / Microsoft (~5 min, one time) — no Azure access needed
+The script defaults to Microsoft's own first-party "Graph CLI" public client
+(client ID `14d82eec-...`), which exists in every tenant, so **you do not need
+to register an app in the Azure portal.**
+
+1. Locally: `python3 scripts/outlook_auth.py` → it prints a code → open
    https://microsoft.com/devicelogin, enter the code, sign in with your normal
    Microsoft account (your own username/password + MFA — the password never
-   touches this code). It prints the three `MS_*` secrets.
+   touches this code).
+2. It prints `MS_REFRESH_TOKEN` (and `MS_CLIENT_ID`/`MS_TENANT_ID`). You only
+   need to set **`MS_REFRESH_TOKEN`** as a secret; the client ID and tenant
+   default correctly.
 
-> If your org blocks app registrations or requires admin consent for
-> Mail.Read, ask IT to approve the app — it's read-only on your own mailbox.
+> If sign-in says **"needs admin approval"**, your tenant requires admin
+> consent for delegated Mail.Read. Two fallbacks: (a) ask IT to consent to
+> Mail.Read for the Graph CLI app — it's read-only on your own mailbox, a
+> small ask; or (b) register your own app and set `MS_CLIENT_ID`/`MS_TENANT_ID`
+> (the old portal steps, kept in git history).
 
 > Token rotation: Microsoft issues a NEW refresh token on every use. The
 > poller persists the current one in the `channel_auth` table (hidden from the
@@ -58,7 +59,8 @@ project or the existing one — tables don't collide).
 1. Create a **private** repo, push this folder.
 2. *Settings → Secrets and variables → Actions*: add `SUPABASE_URL`,
    `SUPABASE_SECRET_KEY` (the secret/service key, not the publishable one),
-   `MS_CLIENT_ID`, `MS_TENANT_ID`, `MS_REFRESH_TOKEN`, `SLACK_USER_TOKEN`.
+   `MS_REFRESH_TOKEN`, `SLACK_USER_TOKEN`. (`MS_CLIENT_ID`/`MS_TENANT_ID` only
+   needed if you registered your own app instead of using the default.)
 3. *Actions* tab → run **poll-channels** manually once (workflow_dispatch) and
    check the log; afterwards it runs every 10 minutes by itself.
 

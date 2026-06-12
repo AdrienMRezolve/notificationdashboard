@@ -11,8 +11,11 @@ def env(name, default=None, required=False):
 SUPABASE_URL = env("SUPABASE_URL", required=True)
 SUPABASE_SECRET_KEY = env("SUPABASE_SECRET_KEY", required=True)  # sb_secret_*, NOT the publishable key
 
-# Microsoft (Outlook now, Teams later) — Entra ID app registration, device-code flow
-MS_CLIENT_ID = env("MS_CLIENT_ID")
+# Microsoft (Outlook now, Teams later) — device-code flow.
+# Defaults to Microsoft's first-party "Graph CLI" public client, so no Azure
+# app registration is required. Override MS_CLIENT_ID only if you registered
+# your own app.
+MS_CLIENT_ID = env("MS_CLIENT_ID", "14d82eec-204b-4c2f-b7e8-296a70dab67e")
 MS_TENANT_ID = env("MS_TENANT_ID", "organizations")
 MS_REFRESH_TOKEN = env("MS_REFRESH_TOKEN")
 

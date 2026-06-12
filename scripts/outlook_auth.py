@@ -4,8 +4,10 @@ This IS the "connect with your own login" experience: you sign in on
 Microsoft's page with your normal account + MFA; no password ever touches
 this code.
 
-Prerequisites (see README step 2): an Entra ID app registration with
-"Allow public client flows" enabled and delegated Mail.Read permission.
+No Azure portal access needed: by default this uses Microsoft's own public
+"Graph CLI" client, which is pre-registered in every tenant and allows the
+device-code flow. Only fall back to your own app registration if your tenant
+admin has blocked that client or requires admin consent for Mail.Read.
 
 Run:  python3 scripts/outlook_auth.py
 """
@@ -15,7 +17,11 @@ import time
 
 import requests
 
-CLIENT_ID = os.environ.get("MS_CLIENT_ID") or input("Application (client) ID: ").strip()
+# Microsoft Graph Command Line Tools — Microsoft's first-party public client.
+# Supports device-code flow + delegated Mail.Read with user consent.
+GRAPH_CLI_PUBLIC_CLIENT = "14d82eec-204b-4c2f-b7e8-296a70dab67e"
+
+CLIENT_ID = os.environ.get("MS_CLIENT_ID") or GRAPH_CLI_PUBLIC_CLIENT
 TENANT_ID = os.environ.get("MS_TENANT_ID") or input("Directory (tenant) ID [organizations]: ").strip() or "organizations"
 SCOPE = "https://graph.microsoft.com/Mail.Read offline_access"
 BASE = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0"
