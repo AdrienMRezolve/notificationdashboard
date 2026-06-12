@@ -1,0 +1,43 @@
+# Matrix -> Supabase spike: homeserver + WhatsApp/LinkedIn bridges + ingester.
+# SQLite everywhere to keep the POC to four containers; swap to Postgres for
+# anything beyond proof-of-life. See README.md for the one-time init sequence
+# (you must run it before `docker compose up` will succeed).
+
+services:
+  synapse:
+    image: docker.io/matrixdotorg/synapse:latest
+    restart: unless-stopped
+    environment:
+      SYNAPSE_SERVER_NAME: ${MATRIX_SERVER_NAME:-localhost}
+      SYNAPSE_REPORT_STATS: "no"
+    volumes:
+      - ./synapse:/data
+    ports:
+      - "8008:8008"   # client API (the ingester talks here)
+
+  mautrix-whatsapp:
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    restart: unless-stopped
+    depends_on: [synapse]
+    volumes:
+      - ./whatsapp:/data
+
+  mautrix-linkedin:
+    image: dock.mau.dev/mautrix/linkedin:latest
+    restart: unless-stopped
+    depends_on: [synapse]
+    volumes:
+      - ./linkedin:/data
+
+  ingester:
+    build: ./ingester
+    restart: unless-stopped
+    depends_on: [synapse]
+    environment:
+      MATRIX_HOMESERVER: http://synapse:8008
+      MATRIX_ACCESS_TOKEN: ${MATRIX_ACCESS_TOKEN}
+      MATRIX_BOT_MXID: ${MATRIX_BOT_MXID}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}
+    volumes:
+      - ./ingester-data:/data

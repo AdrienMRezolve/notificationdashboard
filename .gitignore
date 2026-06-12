@@ -2,3 +2,10 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Matrix spike runtime data
+matrix/synapse/
+matrix/whatsapp/
+matrix/linkedin/
+matrix/ingester-data/
+matrix/.env
