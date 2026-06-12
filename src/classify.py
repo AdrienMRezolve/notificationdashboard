@@ -1,6 +1,6 @@
-"""Turn a raw Gmail message into a channel + sender.
+"""Turn a raw email (Outlook or Gmail) into a channel + sender.
 
-Gmail is used as a universal adapter: LinkedIn and Teams notification emails
+The mailbox is used as a universal adapter: LinkedIn and Teams notification emails
 are reclassified into their own channel so the dashboard shows them under
 LinkedIn / Teams instead of Email. Slack's own notification emails are dropped
 because Slack is polled directly (avoids duplicates).

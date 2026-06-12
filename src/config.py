@@ -11,6 +11,12 @@ def env(name, default=None, required=False):
 SUPABASE_URL = env("SUPABASE_URL", required=True)
 SUPABASE_SECRET_KEY = env("SUPABASE_SECRET_KEY", required=True)  # sb_secret_*, NOT the publishable key
 
+# Microsoft (Outlook now, Teams later) — Entra ID app registration, device-code flow
+MS_CLIENT_ID = env("MS_CLIENT_ID")
+MS_TENANT_ID = env("MS_TENANT_ID", "organizations")
+MS_REFRESH_TOKEN = env("MS_REFRESH_TOKEN")
+
+# Gmail (dormant — swap back in run_all.py for Gmail users)
 GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET")
 GOOGLE_REFRESH_TOKEN = env("GOOGLE_REFRESH_TOKEN")

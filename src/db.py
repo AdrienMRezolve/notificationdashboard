@@ -36,6 +36,19 @@ def poll_window_start(channel):
     return datetime.now(timezone.utc) - timedelta(hours=config.FIRST_RUN_LOOKBACK_HOURS)
 
 
+def get_auth(channel):
+    res = sb.table("channel_auth").select("auth").eq("channel", channel).execute()
+    return res.data[0]["auth"] if res.data else None
+
+
+def save_auth(channel, auth):
+    sb.table("channel_auth").upsert({
+        "channel": channel,
+        "auth": auth,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }).execute()
+
+
 def mark_connection(channel, status, error=None):
     sb.table("connections").upsert({
         "channel": channel,

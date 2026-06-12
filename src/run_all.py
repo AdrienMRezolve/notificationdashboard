@@ -3,10 +3,10 @@
 Each poller runs independently — one failing doesn't block the others —
 and reports its health to the connections table for the dashboard.
 """
-from . import db, gmail_poller, slack_poller
+from . import db, outlook_poller, slack_poller
 
 POLLERS = {
-    "gmail": gmail_poller.poll,
+    "outlook": outlook_poller.poll,
     "slack": slack_poller.poll,
 }
 
