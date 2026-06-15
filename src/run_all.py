@@ -6,7 +6,7 @@ and reports its health to the connections table for the dashboard.
 from . import db, outlook_poller, slack_poller
 
 POLLERS = {
-    "outlook": outlook_poller.poll,
+    "email": outlook_poller.poll,
     "slack": slack_poller.poll,
 }
 

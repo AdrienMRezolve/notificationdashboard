@@ -20,7 +20,7 @@ SCOPE = "https://graph.microsoft.com/Mail.Read offline_access"
 
 
 def access_token():
-    stored = db.get_auth("outlook") or {}
+    stored = db.get_auth("email") or {}
     refresh = stored.get("refresh_token") or config.MS_REFRESH_TOKEN
     r = requests.post(
         f"https://login.microsoftonline.com/{config.MS_TENANT_ID}/oauth2/v2.0/token",
@@ -33,7 +33,7 @@ def access_token():
     r.raise_for_status()
     data = r.json()
     if data.get("refresh_token"):
-        db.save_auth("outlook", {"refresh_token": data["refresh_token"]})
+        db.save_auth("email", {"refresh_token": data["refresh_token"]})
     return data["access_token"]
 
 
@@ -43,7 +43,7 @@ def poll():
         return None
 
     headers = {"Authorization": f"Bearer {access_token()}"}
-    since = db.poll_window_start("outlook")
+    since = db.poll_window_start("email")
     since_iso = since.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     r = requests.get(
