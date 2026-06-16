@@ -11,12 +11,12 @@ def env(name, default=None, required=False):
 SUPABASE_URL = env("SUPABASE_URL", required=True)
 SUPABASE_SECRET_KEY = env("SUPABASE_SECRET_KEY", required=True)  # sb_secret_*, NOT the publishable key
 
-# Microsoft (Outlook now, Teams later) — device-code flow.
-# Defaults to Microsoft's first-party "Graph CLI" public client, so no Azure
-# app registration is required. Override MS_CLIENT_ID only if you registered
-# your own app.
-MS_CLIENT_ID = env("MS_CLIENT_ID", "14d82eec-204b-4c2f-b7e8-296a70dab67e")
-MS_TENANT_ID = env("MS_TENANT_ID", "organizations")
+# Microsoft (Outlook + multi-user OAuth). Client registered by Rezolve IT.
+# The Graph CLI public client is kept as the MS_CLIENT_ID default only for
+# local device-code flows (scripts/outlook_auth.py). The real app values come
+# from Supabase/GitHub secrets.
+MS_CLIENT_ID = env("MS_CLIENT_ID", "bd9ded6c-52f2-426f-bb90-7a630bc1decd")
+MS_TENANT_ID = env("MS_TENANT_ID", "49e55eb4-ecc2-4f12-8494-9c8c5c38be7f")
 MS_REFRESH_TOKEN = env("MS_REFRESH_TOKEN")
 
 # Gmail (dormant — swap back in run_all.py for Gmail users)

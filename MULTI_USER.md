@@ -57,7 +57,7 @@ Add a "Connections" page. Each button opens the provider authorize URL with
 `state` set to the logged-in user's id, redirecting to the Edge Function:
 
 - Outlook:
-  `https://login.microsoftonline.com/<tenant>/oauth2/v2.0/authorize?client_id=<MS_CLIENT_ID>&response_type=code&redirect_uri=https://rqxwdrjpkgtfooutbcgh.supabase.co/functions/v1/connect-microsoft&response_mode=query&scope=https://graph.microsoft.com/Mail.Read%20offline_access&state=<USER_ID>`
+  `https://login.microsoftonline.com/49e55eb4-ecc2-4f12-8494-9c8c5c38be7f/oauth2/v2.0/authorize?client_id=bd9ded6c-52f2-426f-bb90-7a630bc1decd&response_type=code&redirect_uri=https://rqxwdrjpkgtfooutbcgh.supabase.co/functions/v1/connect-microsoft&response_mode=query&scope=https://graph.microsoft.com/Mail.Read%20offline_access&state=<USER_ID>`
 - Slack:
   `https://slack.com/oauth/v2/authorize?client_id=<SLACK_CLIENT_ID>&user_scope=im:history,im:read,mpim:history,mpim:read,users:read,users:read.email&redirect_uri=https://rqxwdrjpkgtfooutbcgh.supabase.co/functions/v1/connect-slack&state=<USER_ID>`
 
