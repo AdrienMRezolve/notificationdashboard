@@ -17,6 +17,7 @@ SUPABASE_SECRET_KEY = env("SUPABASE_SECRET_KEY", required=True)  # sb_secret_*, 
 # from Supabase/GitHub secrets.
 MS_CLIENT_ID = env("MS_CLIENT_ID", "bd9ded6c-52f2-426f-bb90-7a630bc1decd")
 MS_TENANT_ID = env("MS_TENANT_ID", "49e55eb4-ecc2-4f12-8494-9c8c5c38be7f")
+MS_CLIENT_SECRET = env("MS_CLIENT_SECRET")  # confidential client — required for token refresh
 MS_REFRESH_TOKEN = env("MS_REFRESH_TOKEN")
 
 # Gmail (dormant — swap back in run_all.py for Gmail users)

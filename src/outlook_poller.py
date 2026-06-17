@@ -18,13 +18,6 @@ from .classify import classify
 GRAPH = "https://graph.microsoft.com/v1.0"
 SCOPE = "https://graph.microsoft.com/Mail.Read offline_access"
 
-# Microsoft's first-party Graph CLI public client — supports device-code flow
-# without a client_secret. Used for the env-secret personal mailbox path.
-# The Rezolve Entra app (config.MS_CLIENT_ID) is a confidential client (needs a
-# secret) and is used only for the multi-user OAuth flow via the Edge Functions.
-_GRAPH_CLI_CLIENT_ID = "14d82eec-204b-4c2f-b7e8-296a70dab67e"
-
-
 def access_token(refresh_token, client_id=None):
     """Exchange a refresh token. Returns (access_token, rotated_refresh_or_None)."""
     payload = {
@@ -33,6 +26,8 @@ def access_token(refresh_token, client_id=None):
         "refresh_token": refresh_token,
         "scope": SCOPE,
     }
+    if config.MS_CLIENT_SECRET:
+        payload["client_secret"] = config.MS_CLIENT_SECRET
     r = requests.post(
         f"https://login.microsoftonline.com/{config.MS_TENANT_ID}/oauth2/v2.0/token",
         data=payload, timeout=30)
@@ -120,11 +115,11 @@ def poll():
             print(f"outlook[{user_id}]: ERROR {e}")
             db.mark_user_health("email", user_id, "error", str(e)[:300])
 
-    # Shared env-secret mailbox (personal, device-code flow → Graph CLI public client)
+    # Shared env-secret mailbox (personal device-code token, Rezolve app + client_secret)
     env_refresh = (db.get_auth("email") or {}).get("refresh_token") or config.MS_REFRESH_TOKEN
     if env_refresh:
         saw_any = True
-        total += _poll_one(env_refresh, None, patterns, client_id=_GRAPH_CLI_CLIENT_ID)
+        total += _poll_one(env_refresh, None, patterns)
 
     if not saw_any:
         print("outlook: no connections configured, skipping")
