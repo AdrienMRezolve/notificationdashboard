@@ -2,7 +2,7 @@ import os
 
 
 def env(name, default=None, required=False):
-    value = os.environ.get(name, default)
+    value = os.environ.get(name) or default  # treat "" same as missing
     if required and not value:
         raise SystemExit(f"Missing required environment variable: {name}")
     return value
